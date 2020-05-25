@@ -2,12 +2,13 @@
   "name": "electron-react-webpack",
   "version": "0.0.1",
   "private": true,
-  "main": "./electron/main.js",
   "homepage": "./",
+  "main": "./electron/main.js",
   "scripts": {
     "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 3000 --config=./webpack.dev.config.js --mode development",
     "build": "webpack --config webpack.build.config.js --mode production --progress",
-    "package": "webpack --config webpack.build.config.js --mode production --progress && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder"
+    "package": "webpack --config webpack.build.config.js --mode production --progress && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "electron-util": "^0.14.1",
@@ -47,10 +48,12 @@
   },
   "build": {
     "appId": "com.example.app",
-    "directories": {
-      "app": "./build/"
-    },
     "productName": "electron-react-webpack",
+    "asar": true,
+    "directories": {
+      "app": "build",
+      "output": "dist"
+    },
     "artifactName": "${name}-${os}-${version}.${ext}",
     "mac": {
       "target": [
@@ -59,7 +62,10 @@
       ]
     },
     "win": {
-      "target": "nsis",
+      "target": [
+        "nsis",
+        "msi"
+      ],
       "publisherName": "electron-react-webpack"
     },
     "linux": {

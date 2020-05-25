@@ -84,6 +84,10 @@ const mainConfig = {
     filename: "main.bundle.js",
     path: path.join(__dirname, "build"),
   },
+  node: {
+    __dirname: false,
+    __filename: false,
+  },
   resolve: {
     extensions: [".js", ".jsx"],
   },
@@ -105,7 +109,6 @@ const mainConfig = {
       remove: ["scripts", "devDependencies", "build"],
       replace: {
         main: "./main.bundle.js",
-        scripts: { start: "electron ./main.bundle.js" },
       },
     }),
   ],
