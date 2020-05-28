@@ -3,10 +3,10 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BabiliPlugin = require("babili-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyPkgJsonPlugin = require("copy-pkg-json-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-const rendererConfig = {
+module.exports = {
   entry: {
     app: "./src/index.js",
   },
@@ -55,7 +55,7 @@ const rendererConfig = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./public/index.html",
+      template: "./index.html",
       minify: {
         collapseWhitespace: true,
         removeAttributeQuotes: true,
@@ -67,6 +67,7 @@ const rendererConfig = {
       "process.env.NODE_ENV": JSON.stringify("production"),
     }),
     new BabiliPlugin(),
+    new CleanWebpackPlugin(),
   ],
   stats: {
     colors: true,
@@ -75,43 +76,3 @@ const rendererConfig = {
     modules: false,
   },
 };
-
-const mainConfig = {
-  entry: "./electron/main.js",
-  target: "electron-main",
-  devtool: "source-map",
-  output: {
-    filename: "main.bundle.js",
-    path: path.join(__dirname, "build"),
-  },
-  node: {
-    __dirname: false,
-    __filename: false,
-  },
-  resolve: {
-    extensions: [".js", ".jsx"],
-  },
-  module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        use: [{ loader: "babel-loader" }],
-      },
-    ],
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("production"),
-    }),
-    new CopyPkgJsonPlugin({
-      remove: ["scripts", "devDependencies", "build"],
-      replace: {
-        main: "./main.bundle.js",
-      },
-    }),
-  ],
-};
-
-module.exports = [mainConfig, rendererConfig];
